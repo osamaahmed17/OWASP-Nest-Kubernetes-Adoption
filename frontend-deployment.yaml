@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: nest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      name: frontend
+      namespace: nest
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: osamaahmed17/owasp-frontend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: VITE_ALGOLIA_APP_ID
+              value: "3WQFHZP3HD"
+            - name: VITE_ALGOLIA_SEARCH_API_KEY
+              value: "901cbcf29581b3acd668919fe05d2305"
+            - name: VITE_API_URL
+              value: "http://backend.nest.svc.cluster.local:8000/api/v1/"
+            - name: VITE_ENVIRONMENT
+              value: "local"
+            - name: VITE_GRAPHQL_URL
+              value: "http://backend.nest.svc.cluster.local:8000/graphql/"
+            - name: VITE_IDX_URL
+              value: "http://backend.nest.svc.cluster.local:8000/idx/"

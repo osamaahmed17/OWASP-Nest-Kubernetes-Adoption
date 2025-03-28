@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finalbackend
+  labels:
+    app: finalbackend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finalbackend
+  template:
+    metadata:
+      labels:
+        app: finalbackend
+    spec:
+    
+      containers:
+      - name: finalbackend
+        image: osamaahmed17/backend:latest 
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          cd /home/owasp && 
+          python manage.py migrate && 
+          python manage.py runserver 0.0.0.0:8000
+        env:
+        - name: DJANGO_DB_HOST
+          value: "postgres-service"
+        - name: DJANGO_DB_NAME
+          value: "nest_db_dev"
+        - name: DJANGO_DB_PASSWORD
+          value: "nest_user_dev_password"
+        - name: DJANGO_DB_PORT
+          value: "5432"
+        - name: DJANGO_DB_USER
+          value: "nest_user_dev"
+        - name: DJANGO_CONFIGURATION
+          value: "Local"
+        - name: DJANGO_SENTRY_DSN
+          value: "None"
+        - name: DJANGO_ALGOLIA_APPLICATION_ID
+          value: "3WQFHZP3HD"
+        - name: DJANGO_ALGOLIA_WRITE_API_KEY
+          value: "302b02aa6cffbcf48390413e58a6ef7e"
+        - name: DJANGO_OPEN_AI_SECRET_KEY
+          value: "None"
+        - name: DJANGO_SECRET_KEY
+          value: "None"
+        - name: DJANGO_SLACK_BOT_TOKEN
+          value: "None"
+        - name: GITHUB_TOKEN
+          value: "None"
+        - name: DJANGO_SLACK_SIGNING_SECRET
+          value: "None"
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
